@@ -25,7 +25,7 @@ class Login {
         try {
             // Check user credentials and return user data on success
             // Allow login with either username or email
-            $sql = "SELECT * FROM users WHERE username = :username OR email = :username";
+            $sql = "SELECT * FROM users WHERE username = :username OR email = :email";
             $stmt = $this->db->prepare($sql);
             $stmt->bindParam(':username', $username);
             $stmt->bindParam(':email', $username);
@@ -52,6 +52,6 @@ class Login {
             //throw new Exception('An error occurred. Please try again later.');
         }
 
-        return $this->errors ? ['success' => false, 'errors' => $this->errors] : ['success' => true, 'user' => $user];
+        return $this->errors ? ['success' => false, 'errors' => $this->errors] : ['success' => true, 'user' => $user, 'user_id' => $user['user_id']];
     }
 }
