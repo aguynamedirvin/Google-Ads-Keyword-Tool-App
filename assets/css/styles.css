@@ -1,0 +1,47 @@
+.button-group {
+    display: flex;
+    gap: 15px;
+}
+.field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+button,
+.button,
+input[type="submit"] {
+    padding: 8px 16px;
+    border: 1px solid #3b82f6;
+    color: #fff;
+    background: #3b82f6 !important;
+    border-radius: 8px;
+    font-weight: 600;
+}
+button:hover,
+.button:hover,
+input[type="submit"]:hover {
+    background: #1d4ed8 !important;
+}
+
+input[type="text"] {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0; /* This makes the input fields equally share the available space */
+}
+input[type="text"] {
+    min-width: 100px; /* minimum width */
+    max-width: 500px; /* maximum width */
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid #CCC;
+}
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-color: #1d4ed8;
+}

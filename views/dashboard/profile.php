@@ -5,55 +5,65 @@ include 'partials/header.php';
 
 ?>
 
-<div class="screen">
+<div class="screen container mx-auto">
 
-        <div class="p-8">
-            <h1 class="text-5xl font-medium mb-4">Profile Settings</h1>
+        <div class="p-4">
+            <h1 class="text-3xl md:text-6xl font-bold mb-2 md:mb-4">Profile Settings</h1>
             <p class="text-xl">Manage your profile information.</p>
         </div>
         
-        <div class="p-8">
+        <div class="p-4">
             
-            <div class="bg-slate-300 rounded-lg p-6">
+            <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-md">
 
-                <h2 class="font-medium text-xl mb-4">Update Photo</h2>
+                
+                <form class="" action="" method="POST" enctype="multipart/form-data" class="flex md:flex-row gap-4">
+                    <h2 class="font-medium text-xl mb-4">General Information</h2>
+                    
+                    <div class="mb-6">
+                        <?php
+                            $userAvatarUrl = new File();
+                            $userAvatarUrl = $userAvatarUrl->find($user->avatar());
 
-                <?php
-                    $userAvatarUrl = new File();
-                    $userAvatarUrl = $userAvatarUrl->find($user->avatar());
+                            if ($userAvatarUrl):
+                        ?>
+                            <img src="/<?= $userAvatarUrl ?>" class="w-24 h-24 rounded-2xl object-cover">
+                        <?php else: ?>
+                            <div class="w-32 h-32 rounded-full bg-gray-300"></div>
+                        <?php endif; ?>
+                        <input type="file" name="photo" required>
+                        <button class="button" type="submit">Update Photo</button>
+                    </div>
 
-                    if ($userAvatarUrl):
-                ?>
-                    <img src="/<?php echo $userAvatarUrl ?>" class="w-32 h-32 rounded-full object-cover">
-                <?php else: ?>
-                    <div class="w-32 h-32 rounded-full bg-gray-300"></div>
-                <?php endif; ?>
+                    <div class="flex flex-col gap-4">
 
+                        <div class="flex">
+                            <div class="flex flex-col">
+                                <label for="firstName">First Name</label>
+                                <input type="text" name="firstName" placeholder="First Name" required value="<?= $user->firstName() ?>">
+                            </div>
 
-                <form action="" method="POST" enctype="multipart/form-data" class="flex flex-col gap-4">
-                    <input type="file" name="photo" required>
-                    <button class="button" type="submit">Update Photo</button>
-                </form>
+                            <div class="flex flex-col">
+                                <label for="lastName">Last Name</label>
+                                <input type="text" name="lastName" placeholder="Last Name" required value="<?= $user->lastName() ?>">
+                            </div>
+                        </div>
+                        
 
-                <h2 class="font-medium text-xl mb-4">Update Name</h2>
-                <form action="settings" method="POST" class="flex flex-col gap-4">
-                    <input type="text" name="firstName" placeholder="First Name" required value="<?php echo $user->firstName() ?>">
-                    <input type="text" name="lastName" placeholder="Last Name" required value="<?php echo $user->lastName() ?>">
-                    <button class="button" type="submit">Update Name</button>
-                </form>
+                        <div class="flex flex-col">
+                            <label for="email">Update Email</label>
+                            <input type="email" name="email" placeholder="Email" required value="<?= $user->email() ?>">
+                        </div>
 
-                <h2 class="font-medium text-xl mb-4">Update Email</h2>
-                <form action="" method="POST" class="flex flex-col gap-4">
-                    <input type="email" name="email" placeholder="Email" required value="<?php echo $user->email() ?>">
-                    <button class="button" type="submit">Update Email</button>
-                </form>
+                        <div class="flex flex-col gap-4">
+                            <h2 class="font-medium text-xl mt-2">Change Password</h2>
+                            <input type="password" name="currentPassword" placeholder="Current Password" required>
+                            <input type="password" name="newPassword" placeholder="New Password" required>
+                            <input type="password" name="confirmNewPassword" placeholder="Confirm New Password" required>
+                        </div>
+                    </div>
 
-                <h2 class="font-medium text-xl mb-4">Change Password</h2>
-                <form action="" method="POST" class="flex flex-col gap-4">
-                    <input type="password" name="currentPassword" placeholder="Current Password" required>
-                    <input type="password" name="newPassword" placeholder="New Password" required>
-                    <input type="password" name="confirmNewPassword" placeholder="Confirm New Password" required>
-                    <button class="button" type="submit">Change Password</button>
+                    <button class="button mt-4" type="submit">Save</button>
                 </form>
             </div>
 
