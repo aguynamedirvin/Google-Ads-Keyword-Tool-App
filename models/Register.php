@@ -33,7 +33,6 @@ class Registration {
                 $stmt->bindValue(3, $email);
                 $stmt->bindValue(4, $firstName);
                 $stmt->bindValue(5, $lastName);
-
                 $stmt->execute();
 
                 // Check if the insertion was successful
@@ -111,7 +110,7 @@ class Registration {
         }
     }
 
-    // Check if username or email already exists
+    // Check if username already exists
     private function isUsernameUnique($username) {
         $stmt = $this->db->getConnection()->prepare("SELECT user_id FROM users WHERE username = ?");
         $stmt->bindValue(1, $username);
