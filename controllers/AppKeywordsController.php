@@ -21,7 +21,7 @@ class AppKeywordsController {
         $retriveKeywords = $data->retrieveKeywords();
 
         if ($retriveKeywords) {
-            $jsonData = json_encode($retriveKeywords);
+            $keywordsJsonData = json_encode($retriveKeywords);
         } else {
             echo "Failed to get data from the database.";
         }
@@ -40,6 +40,20 @@ class AppKeywordsController {
             $adGroupsJsonData = json_encode($retrieveAdGroups);
         } else {
             echo "Failed to get data from the database.";
+        }
+
+        $retrieveSearchTerms = $data->retrieveSearchTerms();
+        if ($retrieveSearchTerms) {
+            $searchTermsJsonData = json_encode($retrieveSearchTerms);
+        } else {
+            echo "Failed to get SearchTerms data from the database.";
+        }
+
+        $retrieveKeywordMetrics = $data->retrieveKeywordMetrics();
+        if ($retrieveKeywordMetrics) {
+            $keywordsMetricsJsonData = json_encode($retrieveKeywordMetrics);
+        } else {
+            echo "Failed to get KeywordMetrics data from the database.";
         }
 
         //$uploadKeywords = new Keywords();
@@ -76,8 +90,6 @@ class AppKeywordsController {
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
             $file = $_FILES['file'];
 
-            $keywords = new Keywords();
-
             // Upload the file and store in server
             $uploadKeywords = new File();
             $fileUpload = $uploadKeywords->upload($file); // Upload the file
@@ -86,31 +98,23 @@ class AppKeywordsController {
                 // Get the file path
                 $filePath = $fileUpload['data']['destination'];
 
-                // Process the file
+                // Process the CSV file to correct format
+                $keywords = new Keywords();
                 $processedData = $keywords->process($filePath);
 
-                // Get search term data from new processed CSV file
+                // Get data from the new processed CSV file
                 $getSearchTermData = $keywords->getSearchTermData($filePath,[
                     // List all columns that you want to retrieve
                     'searchTerm', 'campaignName', 'adGroupName', 'matchType', 'addedExcluded', 'keyword', 'conversions', 
                     'impressions', 'averageCPC', 'clickThroughRate', 'conversionRate', 'costPerConversion'
                 ]); 
 
-                // Store all data at once
-                $storeCampaignData = new CampaignDataProcessor();
-                $storeCampaignData->storeAllAtOnce($user->id(), $getSearchTermData);
-
-
-                $getCampaignData = $keywords->getSearchTermData($filePath,[
-                    // List all columns that you want to retrieve
-                    'searchTerm', 'campaignName', 'adGroupName', 'matchType', 'addedExcluded', 'keyword', 'conversions', 
-                    'impressions', 'averageCPC', 'clickThroughRate', 'conversionRate', 'costPerConversion'
-                ]);
-
-                // If able to get data, store to datase
+                // If able to get the CSV data, store to datase
                 if ($getSearchTermData) {
+                    // Store all data at once
                     //print_r($getSearchTermData);
-                    //$keywords->storeKeywords($getSearchTermData);
+                    $storeCampaignData = new CampaignDataProcessor();
+                    $storeCampaignData->storeAllAtOnce($user->id(), $getSearchTermData);
 
                     $jsonData = json_encode($getSearchTermData);
                 } else {

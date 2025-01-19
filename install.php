@@ -37,6 +37,7 @@ class Installer {
         $this->dropTable('keyworddata');
         $this->dropTable('adgroups');
         $this->dropTable('campaigns');
+        $this->dropTable('searchterms');
         //$this->dropTable('users');
     }
 
@@ -94,6 +95,21 @@ class Installer {
                 )";
             $this->dbConnection->exec($sqlKeywordData);
             echo "Table 'keyword data' created successfully.\n";
+
+            // Create SearchTerms Table
+            $sqlSearchTermData = "CREATE TABLE IF NOT EXISTS searchterms (
+                searchterm_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                keyworddata_id INT UNSIGNED,
+                search_term VARCHAR(255) NOT NULL,
+                match_type VARCHAR(50),
+                impressions INT UNSIGNED,
+                clicks INT UNSIGNED,
+                conversions INT UNSIGNED,
+                cost DECIMAL(10, 2),
+                FOREIGN KEY (keyworddata_id) REFERENCES keyworddata(keyworddata_id)
+                )";
+            $this->dbConnection->exec($sqlSearchTermData);
+            echo "Table 'searchTerms data' created successfully.\n";
 
             // Create FinancialMetrics Table
             $sqlFinancialMetrics = "CREATE TABLE IF NOT EXISTS financialmetrics (

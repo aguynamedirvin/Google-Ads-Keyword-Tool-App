@@ -1,14 +1,22 @@
 <?php
 // controllers/ProfileController.php
 
-require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/../models/File.php';
+require_once __DIR__ . '/../models/User.php';
 
 class ProfileController {
-    public function index() {
-        // Check if user is logged in
-        $user = new User();
 
+    public $user;
+
+    public function __construct() {
+        $this->user = new User();
+    }
+
+    public function index($data) {
+
+        $user = $this->user;
+        
+        // Check if user is logged in
         if (!$user->isLoggedIn()) {
             header('Location: /login');
             exit();

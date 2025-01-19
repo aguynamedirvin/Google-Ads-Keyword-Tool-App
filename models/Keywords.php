@@ -99,6 +99,16 @@ class Keywords {
             }
         }
 
+        // Find column index for 'Match type' in $data and format the values with the matchTypeFormatter function
+        $matchTypeIndex = array_search('Match type', $header);
+        foreach ($data as $rowIndex => $row) {
+            if ($rowIndex === 0) { // Skip the old header row
+                continue;
+            }
+            $data[$rowIndex][$matchTypeIndex] = $this->matchTypeFormatter($row[$matchTypeIndex]);
+        }
+
+
         // Reorder and insert blank columns as necessary
         $reorderedData = [];
         $newHeader = array_values($correctOrder); // New header row with renamed columns
@@ -113,6 +123,7 @@ class Keywords {
             }
             $reorderedData[] = $newRow;
         }
+
 
         // Write to new CSV file
         if ($file = fopen('uploads/processed.csv', "w")) {
@@ -135,6 +146,28 @@ class Keywords {
         }
 
         return $reorderedData;
+    }
+
+    public function matchTypeFormatter($matchType) {
+        switch ($matchType) {
+            case 'Exact match':
+                return 'exact';
+                break;
+            case 'Exact match (close variant)':
+                return 'exact-close-variant';
+                break;
+            case 'Phrase':
+                return 'phrase';
+                break;
+            case 'Phrase match (close variant)':
+                return 'phrase-close-variant';
+                break;
+            case 'Broad match':
+                return 'broad';
+                break;
+            default:
+                return 'Unknown';
+        }
     }
 
 
@@ -423,6 +456,34 @@ class Keywords {
      */
     function retrieveKeywords() {
         $sql = "SELECT * FROM keyworddata";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            return $result;
+        } else {
+            echo "Failed to retrieve data.";
+            return false;
+        }
+    }
+
+    function retrieveSearchTerms() {
+        $sql = "SELECT * FROM searchterms";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            return $result;
+        } else {
+            echo "Failed to retrieve data.";
+            return false;
+        }
+    }
+
+    function retrieveKeywordMetrics() {
+        $sql = "SELECT * FROM financialmetrics";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -7,7 +7,9 @@ require_once __DIR__ . '/../models/Login.php';
 
 
 class LoginController {
+    
     private $authService;
+    public $user;
 
     public function __construct() {
         $this->authService = new Login();
@@ -23,21 +25,24 @@ class LoginController {
             header('Location: /dashboard');
         }
 
+        // Check if the form was submitted
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+            // Get user input from form...
             $data = $this->getRequestData();
+
+            // Authenticate user
             $response = $this->authService->authenticate($data['username'], $data['password']);
 
+            // Handle successful or failed login
             if ($response['success']) {
-                $user->setSession(['user_id' => $response['user']['user_id'], 'username' => $response['user']['username']]);
-                $test = $this->handleSuccessfulLogin($response);
+                //$user->setSession(['user_id' => $response['user']['user_id'], 'username' => $response['user']['username']]);
+                //print_r($response['data']);
+                $this->handleSuccessfulLogin($response);
             } else {
                 $this->handleFailedLogin($response['errors']);
             }
-        } else {
-            //echo json_encode(['success' => false, 'errors' => $errors]);
-            
-        }
+        } 
 
         include 'views/auth/login.php';
 
@@ -84,10 +89,16 @@ class LoginController {
         }
     }
 
-    private function handleSuccessfulLogin($user) {
+    private function handleSuccessfulLogin($userData) {
         // Set session variables
-        //$_SESSION['user_id'] = $user;
-        //$_SESSION['username'] = $user['username'];
+        //$_SESSION['user']['user_id'] = $user['user_id'];
+        //$_SESSION['user']['username'] = $user['username'];
+        $this->user->setSession([
+            'user_id' => $userData['user']['user_id'], 
+            'username' => $userData['user']['username']
+        ]);
+
+
     
         if ($this->isAjaxRequest()) {
             // Return JSON response for AJAX request

@@ -13,14 +13,14 @@ input[type="submit"] {
     padding: 8px 16px;
     border: 1px solid #3b82f6;
     color: #fff;
-    background: #3b82f6 !important;
+    background: #3b82f6;
     border-radius: 8px;
     font-weight: 600;
 }
 button:hover,
 .button:hover,
 input[type="submit"]:hover {
-    background: #1d4ed8 !important;
+    background: #1d4ed8;
 }
 
 input[type="text"] {

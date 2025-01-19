@@ -27,7 +27,40 @@ class RegisterController {
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-            
+            $data = $this->getRequestData();
+
+            $username = $data['username'];
+            $password = $data['password'];
+            $confirmPassword = $data['confirmPassword'];
+            $email = $data['email'];
+            $firstName = $data['firstName'];
+            $lastName = $data['lastName'];
+
+
+            $response = $this->registerService->register($username, $password, $confirmPassword, $email, $firstName, $lastName);
+
+            if ($response['success']) {
+                if ($this->isAjaxRequest())  {
+                    // Return JSON response for AJAX request
+                    echo json_encode(['success' => true, 'redirect' => '/login']);
+                } else {
+                    // Redirect to the logind for normal requests
+                    header('Location: /login');
+                }
+            } else {
+                $errors = $response['errors'];
+
+                if ($this->isAjaxRequest()) {
+                    // Return JSON response for AJAX request
+                    echo json_encode(['success' => false, 'errors' => $errors]);
+                    exit;
+                } else {
+                    $_SESSION['registration_errors'] = $errors;
+                    header('Location: /register');
+                }
+            }
+
+            /*
             $data = $this->getRequestData();
 
             $username = $data['username'];
@@ -41,6 +74,14 @@ class RegisterController {
 
             if ($response['success']) {
                 $this->handleSuccessfulRegistration($response);
+                if ($this->isAjaxRequest()) {
+                    // Return JSON response for AJAX request
+                    echo json_encode(['success' => true, 'redirect' => '/login']);
+                } else {
+                    // Redirect to the logind for normal requests
+                    header('Location: /login');
+                }
+                exit;
             } else {
                 $this->handleFailedRegistration($response['errors']);
             }
@@ -72,8 +113,6 @@ class RegisterController {
                 $_SESSION['registration_errors'] = ['An unexpected error occurred. Please try again later.' . $e->getMessage()];
 
             }**/
-        } else {
-            //echo json_encode(['success' => false, 'errors' => $errors]);
         }
         
         include 'views/auth/register.php';
@@ -84,6 +123,12 @@ class RegisterController {
         if ($_SERVER['CONTENT_TYPE'] === 'application/json') {
             $json = file_get_contents('php://input');
             return json_decode($json, true);
+
+            $json_decode = json_decode($json, true);
+            $formData = [];
+            foreach ($json_decode as $key => $value) {
+                
+            }
         } else {
             return [
                 'username' => filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING),

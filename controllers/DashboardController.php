@@ -28,7 +28,6 @@ class DashboardController {
         // Get metrics for a specific keyword
         //$keywordMetrics = $processor->getMetrics($userId, ['keyword' => 'Keyword']);
 
-
         // Render the dashboard view
         include 'views/dashboard/dashboard.php';
     }

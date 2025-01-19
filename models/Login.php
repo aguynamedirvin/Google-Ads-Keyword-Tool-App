@@ -28,7 +28,7 @@ class Login {
             $sql = "SELECT * FROM users WHERE username = :username OR email = :email";
             $stmt = $this->db->prepare($sql);
             $stmt->bindParam(':username', $username);
-            $stmt->bindParam(':email', $username);
+            $stmt->bindParam(':email', $email);
             $stmt->execute();
 
             // Check if user exists
@@ -52,6 +52,6 @@ class Login {
             //throw new Exception('An error occurred. Please try again later.');
         }
 
-        return $this->errors ? ['success' => false, 'errors' => $this->errors] : ['success' => true, 'user' => $user, 'user_id' => $user['user_id']];
+        return $this->errors ? ['success' => false, 'errors' => $this->errors] : ['success' => true, 'data' => ['username' => $user['username'], 'user_id' => $user['user_id']]];
     }
 }

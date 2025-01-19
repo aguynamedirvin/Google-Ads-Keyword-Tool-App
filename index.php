@@ -9,10 +9,11 @@ require_once __DIR__ . '/db.php';
 
 require_once __DIR__ . '/models/User.php';
 require_once __DIR__ . '/models/File.php';
-require_once __DIR__ . '/models/Keywords.php';  
+require_once __DIR__ . '/models/Keywords.php';
 
 session_start();
 
+// Define routes
 $routes = [
     // Home route
     '/' => 'HomeController@index',
@@ -44,6 +45,7 @@ if (array_key_exists($path, $routes)) {
     include "controllers/{$controllerName}.php";
     $controller = new $controllerName();
     $controller->$methodName();
+
 } else {
     // Check if the path starts with '/dashboard'
     if (strpos($path, '/dashboard') === 0) {

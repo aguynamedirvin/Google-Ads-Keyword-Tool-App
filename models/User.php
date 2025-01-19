@@ -60,7 +60,6 @@ class User {
         } else {
             return false;
         }
-        //return isset($_SESSION['user_id']);
     }
 
     /*public function register($username, $password, $email, $firstName, $lastName) {
@@ -198,7 +197,7 @@ class User {
             $updateStmt->bindValue(2, $this->userId, PDO::PARAM_INT);
             $updateStmt->execute();
 
-            return ['success' => true, 'message' => 'Photo URL updated successfully.'];
+            return ['success' => true, 'message' => 'Photo updated successfully.'];
 
         } catch (PDOException $e) {
             // Log the error for internal review
@@ -280,4 +279,5 @@ class User {
         session_destroy();
         return true;
     }
+
 }
